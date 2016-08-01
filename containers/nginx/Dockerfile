@@ -17,11 +17,14 @@ COPY nginx.tmpl /etc/confd/templates/
 COPY confd-watch /usr/local/bin/
 RUN chmod +x /usr/local/bin/confd-watch
 
+# remove the default nginx config
 RUN rm /etc/nginx/sites-enabled/default
 
-RUN date > /built-at.txt
-
+# copy the main nginx config file
 COPY nginx.conf /etc/nginx/
+
+# create the build date file
+RUN date > /built-at.txt
 
 EXPOSE 80
 
