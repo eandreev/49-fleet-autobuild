@@ -13,4 +13,3 @@ RUN date > /built-at.txt
 EXPOSE 80
 
 CMD ["/bin/bash"]
-
