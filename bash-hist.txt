@@ -1,0 +1,5 @@
+fleetctl ssh nginx.service -- docker exec -it nginx_lb cat /built-at.txt
+fleetctl ssh apache@1.service -- docker exec -it apache.1 cat /built-at.txt
+fleetctl list-machines
+fleetctl list-units
+share/fleetctl-init.sh

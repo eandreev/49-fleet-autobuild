@@ -41,10 +41,9 @@ if ARGV[0].eql?('up')
 end
 
 Vagrant.configure("2") do |config|
-  ## always use Vagrants insecure key
-  #config.ssh.insert_key = false
-  ## forward ssh agent to easily ssh into the different machines
-  #config.ssh.forward_agent = true
+  ## use Vagrant's insecure key and forward ssh agent
+  config.ssh.insert_key = false
+  config.ssh.forward_agent = true
 
   # We use the current stable version of CoreOS
   # We assume that VM is provisioned using VirtualBox
@@ -85,6 +84,10 @@ Vagrant.configure("2") do |config|
 	  cloud_config_path = 'generated-cloud-init-files/cloud-init-%02d' % [i]
       config.vm.provision :file, :source => "#{cloud_config_path}", :destination => "/tmp/vagrantfile-user-data"
       config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
+
+      # Copy the bash history file
+      config.vm.provision :file, :source => "bash-hist.txt", :destination => "/tmp/bash-hist.txt"
+      config.vm.provision :shell, :inline => "cat /tmp/bash-hist.txt > /home/core/.bash_history", :privileged => true
     end
   end
 end
