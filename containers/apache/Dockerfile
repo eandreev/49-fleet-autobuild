@@ -2,10 +2,11 @@ FROM ubuntu:14.04
 
 # install apache
 RUN apt-get update
-RUN apt-get install apache2 collectd collectd-utils python-setuptools -y
+RUN apt-get install apache2 collectd collectd-utils supervisor -y
+#python-setuptools -y
 
 # Install supervisord
-RUN easy_install supervisor
+#RUN easy_install supervisor
 
 COPY supervisord.conf /etc/supervisord.conf
 COPY collectd.conf /etc/collectd/collectd.conf
