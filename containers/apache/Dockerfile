@@ -8,8 +8,9 @@ RUN apt-get install apache2 collectd collectd-utils python-setuptools -y
 RUN easy_install supervisor
 
 COPY supervisord.conf /etc/supervisord.conf
-COPY foreground.sh /etc/apache2/foreground.sh
 COPY collectd.conf /etc/collectd/collectd.conf
+COPY foreground.sh /etc/apache2/foreground.sh
+COPY start.sh /start.sh
 
 RUN chmod 755 /start.sh
 RUN chmod 755 /etc/apache2/foreground.sh
