@@ -13,8 +13,8 @@ COPY collectd.conf /etc/collectd/collectd.conf
 #COPY foreground.sh /etc/apache2/foreground.sh
 #COPY start.sh /start.sh
 
-RUN chmod 755 /start.sh
-RUN chmod 755 /etc/apache2/foreground.sh
+#RUN chmod 755 /start.sh
+#RUN chmod 755 /etc/apache2/foreground.sh
 #RUN mkdir /var/log/supervisor/
 
 # modify index.html
