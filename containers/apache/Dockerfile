@@ -26,4 +26,4 @@ RUN date > /built-at.txt
 EXPOSE 80
 
 #CMD ["/bin/bash"]
-CMD ["/bin/bash", "/start.sh"]
+CMD ["/usr/bin/supervisord"]
