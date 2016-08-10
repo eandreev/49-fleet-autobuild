@@ -15,7 +15,7 @@ COPY start.sh /start.sh
 
 RUN chmod 755 /start.sh
 RUN chmod 755 /etc/apache2/foreground.sh
-RUN mkdir /var/log/supervisor/
+#RUN mkdir /var/log/supervisor/
 
 # modify index.html
 RUN echo "<h1>Running from Docker on CoreOS "`date '+%Y-%m-%d %H:%M:%S'`"</h1>" > /var/www/html/index.html
