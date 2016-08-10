@@ -1,5 +1,10 @@
 fleetctl ssh nginx.service -- docker exec -it nginx_lb cat /built-at.txt
 fleetctl ssh apache@1.service -- docker exec -it apache.1 cat /built-at.txt
+fleetctl destroy apache@{,1,2} apache-discovery@{,1,2}
+docker exec -it apache.1 /bin/bash
+etcdctl ls --recursive /
+yes | fleetctl journal apache@1.service
 fleetctl list-machines
 fleetctl list-units
+echo -e '\n===================='; fleetctl list-units; echo -e '\n===================='; etcdctl ls --recursive /; echo
 share/fleetctl-init.sh

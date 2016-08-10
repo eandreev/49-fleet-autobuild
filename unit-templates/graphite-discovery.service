@@ -1,0 +1,38 @@
+[Unit]
+Description=Announce Graphite/Carbon
+
+# Requirements
+Requires=etcd2.service
+Requires=graphite.service
+ 
+# Dependency ordering and binding
+After=etcd2.service
+After=graphite.service
+BindsTo=graphite.service
+
+
+[Service]
+
+# Get CoreOS environmental variables
+EnvironmentFile=/etc/environment
+
+# Start
+## Test whether service is accessible and then register useful information
+ExecStart=/bin/bash -c '\
+  while true; do \
+    ncat -v --recv-only -i 1 $COREOS_PRIVATE_IPV4 7002 2>&1 | grep "Connected to" > /dev/null; \
+    if [ $? -eq 0 ]; then \
+      etcdctl set /services/graphite/${COREOS_PRIVATE_IPV4} \'${COREOS_PRIVATE_IPV4}\' --ttl 30; \
+    else \
+      etcdctl rm /services/graphite/${COREOS_PRIVATE_IPV4} || true; \
+    fi; \
+    sleep 20; \
+  done'
+
+# Stop
+ExecStop=/usr/bin/etcdctl rm /services/graphite/${COREOS_PRIVATE_IPV4}
+
+[X-Fleet]
+# Schedule on the same machine as the associated Apache service
+MachineOf=graphite.service
+

@@ -1,0 +1,44 @@
+[Unit]
+Description=Graphite
+
+# Requirements
+Requires=etcd2.service
+Requires=docker.service
+
+# Dependency ordering
+After=etcd2.service
+After=docker.service
+
+
+[Service]
+# Let the process take awhile to start up (for first run Docker containers)
+TimeoutStartSec=0
+
+# Change killmode from "control-group" to "none" to let Docker remove
+# work correctly.
+KillMode=none
+
+# Get CoreOS environmental variables
+EnvironmentFile=/etc/environment
+
+# Pre-start and Start
+## Directives with "=-" are allowed to fail without consequence
+ExecStartPre=-/usr/bin/docker kill graphite
+ExecStartPre=-/usr/bin/docker rm graphite
+ExecStartPre=/usr/bin/docker pull nickstenning/graphite
+ExecStart=/usr/bin/docker run --name graphite \
+        -p ${COREOS_PUBLIC_IPV4}:80:80 \
+        -p ${COREOS_PUBLIC_IPV4}:2003:2003 \
+        -p ${COREOS_PUBLIC_IPV4}:2004:2004 \
+        -p ${COREOS_PUBLIC_IPV4}:7002:7002 \
+        nickstenning/graphite
+
+# -p ${COREOS_PUBLIC_IPV4}:80:80
+
+# Stop
+ExecStop=/usr/bin/docker stop graphite
+
+[X-Fleet]
+
+MachineMetadata=role=head
+

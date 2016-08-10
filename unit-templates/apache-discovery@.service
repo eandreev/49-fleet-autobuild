@@ -24,7 +24,7 @@ ExecStart=/bin/bash -c '\
     if [ $? -eq 0 ]; then \
       etcdctl set /services/apache/${COREOS_PRIVATE_IPV4} \'${COREOS_PRIVATE_IPV4}:80\' --ttl 30; \
     else \
-      etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4}; \
+      etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4} || true; \
     fi; \
     sleep 20; \
   done'
