@@ -8,10 +8,10 @@ RUN apt-get install apache2 collectd collectd-utils supervisor -y
 # Install supervisord
 #RUN easy_install supervisor
 
-COPY supervisord.conf /etc/supervisord.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY collectd.conf /etc/collectd/collectd.conf
-COPY foreground.sh /etc/apache2/foreground.sh
-COPY start.sh /start.sh
+#COPY foreground.sh /etc/apache2/foreground.sh
+#COPY start.sh /start.sh
 
 RUN chmod 755 /start.sh
 RUN chmod 755 /etc/apache2/foreground.sh
