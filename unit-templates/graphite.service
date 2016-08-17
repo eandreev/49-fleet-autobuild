@@ -31,7 +31,10 @@ ExecStart=/usr/bin/docker run --name graphite \
         -p ${COREOS_PUBLIC_IPV4}:2003:2003 \
         -p ${COREOS_PUBLIC_IPV4}:2004:2004 \
         -p ${COREOS_PUBLIC_IPV4}:7002:7002 \
-        nickstenning/graphite
+        -p ${COREOS_PUBLIC_IPV4}:8000:8000 \
+        jlachowski/grafana-graphite-statsd
+
+# nickstenning/graphite
 
 # -p ${COREOS_PUBLIC_IPV4}:80:80
 

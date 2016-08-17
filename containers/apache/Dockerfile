@@ -11,6 +11,9 @@ COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY collectd.conf /etc/collectd/collectd.conf
+COPY collectd.conf /etc/collectd/collectd.conf.orig
+
+COPY start.sh /start.sh
 
 # modify index.html
 RUN echo "<h1>Running from Docker on CoreOS "`date '+%Y-%m-%d %H:%M:%S'`"</h1>" > /var/www/html/index.html
@@ -20,4 +23,5 @@ RUN date > /built-at.txt
 
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord"]
+#CMD ["/usr/bin/supervisord"]
+CMD ["/start.sh"]
