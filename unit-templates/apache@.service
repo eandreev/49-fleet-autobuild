@@ -41,4 +41,3 @@ ExecStop=/usr/bin/docker stop apache.%i
 # Don't schedule on the same machine as other Apache instances
 Conflicts=apache@*.service
 MachineMetadata=role=web  
-
