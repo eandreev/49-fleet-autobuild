@@ -31,7 +31,8 @@ ExecStartPre=/usr/bin/docker pull eandreev/apache-lb-test
 ExecStart=/usr/bin/docker run \
     --name apache.%i \
     -e COREOS_PRIVATE_IPV4=${COREOS_PRIVATE_IPV4} \
-    -p ${COREOS_PRIVATE_IPV4}:80:80 eandreev/apache-lb-test
+    -p ${COREOS_PRIVATE_IPV4}:80:80 \
+    eandreev/apache-lb-test
 
 # Stop
 ExecStop=/usr/bin/docker stop apache.%i
