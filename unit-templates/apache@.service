@@ -30,7 +30,7 @@ ExecStartPre=/usr/bin/docker pull eandreev/apache-lb-test
 #ExecStart=/usr/bin/docker run --name apache.%i -p ${COREOS_PRIVATE_IPV4}:80:80 eandreev/apache-lb-test /usr/sbin/apache2ctl -D FOREGROUND
 ExecStart=/usr/bin/docker run \
     --name apache.%i \
-    -e COREOS_PRIVATE_IPV4=${COREOS_PRIVATE_IPV4} \
+    -e COLLECTD_HOSTNAME=apache-%i \
     -p ${COREOS_PRIVATE_IPV4}:80:80 \
     eandreev/apache-lb-test
 
