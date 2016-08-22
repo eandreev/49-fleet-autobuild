@@ -3,13 +3,13 @@
 require __DIR__.'/HttpRequest.php';
 
 if(!isset($_SERVER['argv'][1]) || !isset($_SERVER['argv'][2]) || !isset($_SERVER['argv'][3])) {
-    error_log('Usage: php '.basename($_SERVER['argv'][0]).' ip port');
+    error_log('Usage: php '.basename($_SERVER['argv'][0]).' etcd-endpoints ip port');
     exit(1);
 }
 
-$ip             = $_SERVER['argv'][1];
-$port           = $_SERVER['argv'][2];
-$etcd_endpoints = $_SERVER['argv'][3];
+$etcd_endpoints = $_SERVER['argv'][1];
+$ip             = $_SERVER['argv'][2];
+$port           = $_SERVER['argv'][3];
 
 $url = "http://$ip:$port";
 

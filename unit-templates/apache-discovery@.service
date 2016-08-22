@@ -1,5 +1,5 @@
 [Unit]
-Description=Announce Apache1
+Description=Announce Apache
 
 # Requirements
 Requires=etcd2.service
@@ -29,11 +29,11 @@ EnvironmentFile=/etc/environment
 #  done'
 # ExecStop=/usr/bin/etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4}
 
-ExecStartPre=-/usr/bin/docker kill apache.%i.discovery
-ExecStartPre=-/usr/bin/docker rm apache.%i.discovery
+ExecStartPre=-/usr/bin/docker kill apache-discovery.%i
+ExecStartPre=-/usr/bin/docker rm apache-discovery.%i
 ExecStartPre=/usr/bin/docker pull eandreev/discovery
-ExecStart=/usr/bin/docker run --name apache.%i.discovery eandreev/discovery php /var/www/php/check-http.php ${COREOS_PRIVATE_IPV4} 80 ${COREOS_PRIVATE_IPV4}:2379,${COREOS_PRIVATE_IPV4}:4001
-ExecStop=/usr/bin/etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4} || /usr/bin/docker stop apache.%i.discovery
+ExecStart=/usr/bin/docker run --name apache-discovery.%i eandreev/discovery php /var/www/php/check-apache.php ${COREOS_PRIVATE_IPV4}:2379,${COREOS_PRIVATE_IPV4}:4001 ${COREOS_PRIVATE_IPV4} 80
+ExecStop=/usr/bin/etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4} || /usr/bin/docker stop apache-discovery.%i
 
 
 [X-Fleet]
