@@ -1,7 +1,7 @@
 FROM ubuntu:14.04
 
 RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install php5-cli php5-curl php5-memcached curl
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install php5-cli php5-curl php5-memcached curl nmap
 
 RUN mkdir -p /var/www/php
 ADD php/* /var/www/php/

@@ -35,7 +35,7 @@ ExecStart=/usr/bin/docker run \
     eandreev/apache-lb-test
 
 # Stop
-ExecStop=/usr/bin/docker stop apache.%i; /usr/bin/docker rm apache.%i 
+ExecStop=/usr/bin/docker stop apache.%i; /usr/bin/docker rm apache.%i
 
 [X-Fleet]
 # Don't schedule on the same machine as other Apache instances
