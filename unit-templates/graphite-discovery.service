@@ -18,19 +18,30 @@ EnvironmentFile=/etc/environment
 
 # Start
 ## Test whether service is accessible and then register useful information
-ExecStart=/bin/bash -c '\
-  while true; do \
-    ncat -v --recv-only -i 1 $COREOS_PRIVATE_IPV4 7002 2>&1 | grep "Connected to" > /dev/null; \
-    if [ $? -eq 0 ]; then \
-      etcdctl set /services/graphite/${COREOS_PRIVATE_IPV4} \'${COREOS_PRIVATE_IPV4}\' --ttl 30; \
-    else \
-      etcdctl rm /services/graphite/${COREOS_PRIVATE_IPV4} || true; \
-    fi; \
-    sleep 20; \
-  done'
-
+#ExecStart=/bin/bash -c '\
+#  while true; do \
+#    ncat -v --recv-only -i 1 $COREOS_PRIVATE_IPV4 7002 2>&1 | grep "Connected to" > /dev/null; \
+#    if [ $? -eq 0 ]; then \
+#      etcdctl set /services/graphite/${COREOS_PRIVATE_IPV4} \'${COREOS_PRIVATE_IPV4}\' --ttl 30; \
+#    else \
+#      etcdctl rm /services/graphite/${COREOS_PRIVATE_IPV4} || true; \
+#    fi; \
+#    sleep 20; \
+#  done'
 # Stop
-ExecStop=/usr/bin/etcdctl rm /services/graphite/${COREOS_PRIVATE_IPV4}
+#ExecStop=/usr/bin/etcdctl rm /services/graphite/${COREOS_PRIVATE_IPV4}
+
+ExecStartPre=/usr/bin/docker pull eandreev/discovery
+ExecStart=/usr/bin/docker run \
+    --rm \
+    --name graphite-discovery \
+    --memory 256m \
+    eandreev/discovery \
+        php /var/www/php/graphite-config-announce.php \
+            ${COREOS_PRIVATE_IPV4}:2379,${COREOS_PRIVATE_IPV4}:4001 \
+            ${COREOS_PRIVATE_IPV4}
+ExecStop=-/usr/bin/etcdctl rm /services/graphite/${COREOS_PRIVATE_IPV4}
+ExecStop=/usr/bin/docker stop graphite-discovery
 
 [X-Fleet]
 # Schedule on the same machine as the associated Apache service
