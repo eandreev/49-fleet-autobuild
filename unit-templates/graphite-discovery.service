@@ -12,6 +12,8 @@ BindsTo=graphite.service
 
 
 [Service]
+# Let processes take awhile to start up (for first run Docker containers)
+TimeoutStartSec=0
 
 # Get CoreOS environmental variables
 EnvironmentFile=/etc/environment

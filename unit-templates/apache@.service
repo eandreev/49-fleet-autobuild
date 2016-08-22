@@ -29,14 +29,13 @@ EnvironmentFile=/etc/environment
 ExecStartPre=/usr/bin/docker pull eandreev/apache-lb-test
 #ExecStart=/usr/bin/docker run --name apache.%i -p ${COREOS_PRIVATE_IPV4}:80:80 eandreev/apache-lb-test /usr/sbin/apache2ctl -D FOREGROUND
 ExecStart=/usr/bin/docker run \
-    --rm \
     --name apache.%i \
     -e COLLECTD_HOSTNAME=apache-%i \
     -p ${COREOS_PRIVATE_IPV4}:80:80 \
     eandreev/apache-lb-test
 
 # Stop
-ExecStop=/usr/bin/docker stop apache.%i
+ExecStop=/usr/bin/docker stop apache.%i; /usr/bin/docker rm apache.%i 
 
 [X-Fleet]
 # Don't schedule on the same machine as other Apache instances
