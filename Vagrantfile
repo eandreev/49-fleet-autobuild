@@ -87,7 +87,7 @@ Vagrant.configure("2") do |config|
 
       # Copy the bash history file
       config.vm.provision :file, :source => "bash-hist.txt", :destination => "/tmp/bash-hist.txt"
-      config.vm.provision :shell, :inline => "cat /tmp/bash-hist.txt > /home/core/.bash_history", :privileged => true
+      config.vm.provision :shell, :inline => "cat /tmp/bash-hist.txt > /home/core/.bash_history; chown core:core /home/core/.bash_history", :privileged => true
     end
   end
 end
