@@ -10,7 +10,6 @@ After=etcd2.service
 After=apache@%i.service
 BindsTo=apache@%i.service
 
-
 [Service]
 
 # Get CoreOS environmental variables
@@ -18,19 +17,24 @@ EnvironmentFile=/etc/environment
 
 # Start
 ## Test whether service is accessible and then register useful information
-ExecStart=/bin/bash -c '\
-  while true; do \
-    curl -f ${COREOS_PRIVATE_IPV4}:80; \
-    if [ $? -eq 0 ]; then \
-      etcdctl set /services/apache/${COREOS_PRIVATE_IPV4} \'${COREOS_PRIVATE_IPV4}:80\' --ttl 30; \
-    else \
-      etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4} || true; \
-    fi; \
-    sleep 20; \
-  done'
+#ExecStart=/bin/bash -c '\
+#  while true; do \
+#    curl -f ${COREOS_PRIVATE_IPV4}:80; \
+#    if [ $? -eq 0 ]; then \
+#      etcdctl set /services/apache/${COREOS_PRIVATE_IPV4} \'${COREOS_PRIVATE_IPV4}:80\' --ttl 30; \
+#    else \
+#      etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4} || true; \
+#    fi; \
+#    sleep 20; \
+#  done'
+# ExecStop=/usr/bin/etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4}
 
-# Stop
-ExecStop=/usr/bin/etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4}
+ExecStartPre=-/usr/bin/docker kill apache.%i.discovery
+ExecStartPre=-/usr/bin/docker rm apache.%i.discovery
+ExecStartPre=/usr/bin/docker pull eandreev/discovery
+ExecStart=/usr/bin/docker run --name apache.%i.discovery eandreev/discovery php /var/www/php/check-http.php ${COREOS_PRIVATE_IPV4} 80 ${COREOS_PRIVATE_IPV4}:2379,${COREOS_PRIVATE_IPV4}:4001
+ExecStop=/usr/bin/etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4} || /usr/bin/docker stop apache.%i.discovery
+
 
 [X-Fleet]
 # Schedule on the same machine as the associated Apache service
