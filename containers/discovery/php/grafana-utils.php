@@ -21,7 +21,8 @@ function get_all_datasources($grafana_url) {
 
 function create_graphite_datasource_if_missing($grafana_url) {
     $datasources = get_all_datasources($grafana_url);
-    $found = array_filter($datasources, function($d) { return 'Graphite' == d['name'] && 'graphite' == d['type']; });
+    $found = array_filter($datasources, function($d) { return 'Graphite' == $d['name'] && 'graphite' == $d['type']; });
+    error_log(' =========> Found '.count($found).' items');
     if(0 == count($found))
         create_graphite_datasource($grafana_url);
 }
