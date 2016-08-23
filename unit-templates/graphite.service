@@ -18,11 +18,8 @@ TimeoutStartSec=0
 # work correctly.
 KillMode=none
 
-# Get CoreOS environmental variables
 EnvironmentFile=/etc/environment
 
-# Pre-start and Start
-## Directives with "=-" are allowed to fail without consequence
 ExecStartPre=-/usr/bin/docker kill graphite
 ExecStartPre=-/usr/bin/docker rm graphite
 ExecStartPre=/usr/bin/docker pull nickstenning/graphite
@@ -33,15 +30,10 @@ ExecStart=/usr/bin/docker run --name graphite \
         -p ${COREOS_PUBLIC_IPV4}:7002:7002 \
         -p ${COREOS_PUBLIC_IPV4}:8000:8000 \
         eandreev/grafana
-
-# nickstenning/graphite
-
-# -p ${COREOS_PUBLIC_IPV4}:80:80
-
-# Stop
 ExecStop=/usr/bin/docker stop graphite
 
-[X-Fleet]
+# we used nickstenning/graphite previously
 
+[X-Fleet]
 MachineMetadata=role=head
 

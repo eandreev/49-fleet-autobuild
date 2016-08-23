@@ -15,27 +15,14 @@ BindsTo=graphite.service
 # Let processes take awhile to start up (for first run Docker containers)
 TimeoutStartSec=0
 
-# Get CoreOS environmental variables
-EnvironmentFile=/etc/environment
+# Change killmode from "control-group" to "none" to let Docker remove
+# work correctly.
+KillMode=none
 
-# Start
-## Test whether service is accessible and then register useful information
-#ExecStart=/bin/bash -c '\
-#  while true; do \
-#    ncat -v --recv-only -i 1 $COREOS_PRIVATE_IPV4 7002 2>&1 | grep "Connected to" > /dev/null; \
-#    if [ $? -eq 0 ]; then \
-#      etcdctl set /services/graphite/${COREOS_PRIVATE_IPV4} \'${COREOS_PRIVATE_IPV4}\' --ttl 30; \
-#    else \
-#      etcdctl rm /services/graphite/${COREOS_PRIVATE_IPV4} || true; \
-#    fi; \
-#    sleep 20; \
-#  done'
-# Stop
-#ExecStop=/usr/bin/etcdctl rm /services/graphite/${COREOS_PRIVATE_IPV4}
+EnvironmentFile=/etc/environment
 
 ExecStartPre=/usr/bin/docker pull eandreev/discovery
 ExecStart=/usr/bin/docker run \
-    --rm \
     --name graphite-discovery \
     --memory 256m \
     eandreev/discovery \
@@ -48,4 +35,3 @@ ExecStop=/usr/bin/docker stop graphite-discovery
 [X-Fleet]
 # Schedule on the same machine as the associated Apache service
 MachineOf=graphite.service
-

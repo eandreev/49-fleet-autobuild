@@ -23,9 +23,6 @@ RUN rm /etc/nginx/sites-enabled/default
 # copy the main nginx config file
 COPY nginx.conf /etc/nginx/
 
-# create the build date file
-RUN date > /built-at.txt
-
 EXPOSE 80
 
 CMD ["/bin/bash"]

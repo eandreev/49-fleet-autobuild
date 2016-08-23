@@ -18,17 +18,10 @@ TimeoutStartSec=0
 # work correctly.
 KillMode=none
 
-# Get CoreOS environmental variables
 EnvironmentFile=/etc/environment
 
-# Pre-start and Start
-## Directives with "=-" are allowed to fail without consequence
-ExecStartPre=-/usr/bin/docker kill nginx_lb
-ExecStartPre=-/usr/bin/docker rm nginx_lb
 ExecStartPre=/usr/bin/docker pull eandreev/nginx-lb-test
 ExecStart=/usr/bin/docker run --name nginx_lb -p ${COREOS_PUBLIC_IPV4}:80:80 eandreev/nginx-lb-test /usr/local/bin/confd-watch ${COREOS_PUBLIC_IPV4}:4001
-
-# Stop
 ExecStop=/usr/bin/docker stop nginx_lb
 
 [X-Fleet]

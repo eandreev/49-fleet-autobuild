@@ -15,28 +15,15 @@ BindsTo=apache@%i.service
 # Let processes take awhile to start up (for first run Docker containers)
 TimeoutStartSec=0
 
+# Change killmode from "control-group" to "none" to let Docker remove
+# work correctly.
+KillMode=none
+
 # Get CoreOS environmental variables
 EnvironmentFile=/etc/environment
 
-# Start
-## Test whether service is accessible and then register useful information
-#ExecStart=/bin/bash -c '\
-#  while true; do \
-#    curl -f ${COREOS_PRIVATE_IPV4}:80; \
-#    if [ $? -eq 0 ]; then \
-#      etcdctl set /services/apache/${COREOS_PRIVATE_IPV4} \'${COREOS_PRIVATE_IPV4}:80\' --ttl 30; \
-#    else \
-#      etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4} || true; \
-#    fi; \
-#    sleep 20; \
-#  done'
-# ExecStop=/usr/bin/etcdctl rm /services/apache/${COREOS_PRIVATE_IPV4}
-
-#ExecStartPre=-/usr/bin/docker kill apache-discovery.%i
-#ExecStartPre=-/usr/bin/docker rm apache-discovery.%i
 ExecStartPre=/usr/bin/docker pull eandreev/discovery
 ExecStart=/usr/bin/docker run \
-    --rm \
     --name apache-discovery.%i \
     --memory 256m \
     eandreev/discovery \

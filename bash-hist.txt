@@ -1,7 +1,9 @@
 fleetctl ssh nginx.service -- docker exec -it nginx_lb cat /built-at.txt
 fleetctl ssh apache@1.service -- docker exec -it apache.1 cat /built-at.txt
 fleetctl destroy apache@{,1,2} apache-discovery@{,1,2}
-for action in stop destroy; do fleetctl $action apache@{,1,2} apache-discovery@{,1,2}; done
+#for action in stop destroy; do fleetctl $action apache@{,1,2} apache-discovery@{,1,2}; sleep 30; done
+fleetctl stop apache@{1,2} apache-discovery@{1,2}; sleep 20; fleetctl destroy apache@{,1,2} apache-discovery@{,1,2}
+fleetctl stop apache@{1,2} apache-discovery@{1,2} nginx graphite graphite-discovery; sleep 20; fleetctl destroy apache@{,1,2} apache-discovery@{,1,2} nginx graphite graphite-discovery
 docker exec -it apache.1 /bin/bash
 etcdctl ls --recursive /
 git reset --hard origin/master

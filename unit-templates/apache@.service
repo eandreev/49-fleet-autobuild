@@ -19,26 +19,16 @@ TimeoutStartSec=0
 # work correctly.
 KillMode=none
 
-# Get CoreOS environmental variables
 EnvironmentFile=/etc/environment
 
-# Pre-start and Start
-## Directives with "=-" are allowed to fail without consequence
-#ExecStartPre=-/usr/bin/docker kill apache.%i
-#ExecStartPre=-/usr/bin/docker rm apache.%i
 ExecStartPre=/usr/bin/docker pull eandreev/apache-lb-test
-#ExecStart=/usr/bin/docker run --name apache.%i -p ${COREOS_PRIVATE_IPV4}:80:80 eandreev/apache-lb-test /usr/sbin/apache2ctl -D FOREGROUND
 ExecStart=/usr/bin/docker run \
-    --rm \
+    --name apache.%i \
     -e COLLECTD_HOSTNAME=apache-%i \
     -p ${COREOS_PRIVATE_IPV4}:80:80 \
     eandreev/apache-lb-test
+ExecStop=/usr/bin/docker stop apache.%i
 
-#     --name apache.%i
-
-# Stop
-ExecStop=/usr/bin/echo ' ===============> ExecStop';# /usr/bin/docker stop apache.%i
-ExecStopPost=/usr/bin/echo ' ===============> ExecStopPost'
 
 [X-Fleet]
 # Don't schedule on the same machine as other Apache instances
