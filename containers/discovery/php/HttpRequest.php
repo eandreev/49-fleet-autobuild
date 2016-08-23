@@ -5,8 +5,8 @@ class HttpRequest {
     /**
      * @see \Utils\HttpRequest::req
      */
-    function perform($method, $url, $requestHeaders = array(), $postFields = false) {
-        return self::req($method, $url, $requestHeaders, $postFields);
+    function perform($method, $url, $requestHeaders = array(), $postFields = false, $basicAuth = false) {
+        return self::req($method, $url, $requestHeaders, $postFields, $basicAuth);
     }
 
     /**
@@ -30,8 +30,10 @@ class HttpRequest {
         curl_setopt($c, CURLOPT_HTTPHEADER, $requestHeaders);
         if(false !== $postFields)
             curl_setopt($c, CURLOPT_POSTFIELDS, $postFields);
-        if(false !== $basicAuth)
+        if(false !== $basicAuth) {
+            error_log(' ============================> basicAuth: '.$basicAuth);
             curl_setopt($c, CURLOPT_USERPWD, $basicAuth);
+        }
         curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($c, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($c, CURLOPT_CONNECTTIMEOUT, 5);
