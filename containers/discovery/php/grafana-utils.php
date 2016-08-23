@@ -2,7 +2,7 @@
 
 require_once __DIR__.'/HttpRequest.php';
 
-function create_graphite_datasource($grafana_url) {
+function create_graphite_datasource($grafana_url, $auth = 'admin:admin') {
     $fields = [
         'name'      => 'Graphite',
         'type'      => 'graphite',
@@ -10,12 +10,12 @@ function create_graphite_datasource($grafana_url) {
         'access'    => 'proxy',
         'basicAuth' => false ];
 
-    $r = HttpRequest::perform('POST', $grafana_url.'/api/datasources', [], $fields);
+    $r = HttpRequest::perform('POST', $grafana_url.'/api/datasources', [], $fields, $auth);
     print_r($r);
 }
 
-function get_all_datasources($grafana_url) {
-    $r = HttpRequest::perform('GET', $grafana_url.'/api/datasources');
+function get_all_datasources($grafana_url, $auth = 'admin:admin') {
+    $r = HttpRequest::perform('GET', $grafana_url.'/api/datasources', [], false, $auth);
     return json_decode($r['body'], true);
 }
 

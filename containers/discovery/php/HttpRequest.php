@@ -16,9 +16,10 @@ class HttpRequest {
      * @param string $url                request url
      * @param array  $requestHeaders     request headers, e.g. array('User-Agent: ...', 'Accept-Charset: ...')
      * @param array  $postFields         request post fields, e.g. array('param1' => val1, 'param2' => val2)
+     * @param string $basicAuth          request basic auth string ('user:passwd')
      * @return array                     request results: array('headers' => array(array('header', value), ...), 'body' => string, 'code' => integer, 'resp_code_level' => integer)
      */
-    static function req($method, $url, $requestHeaders = array(), $postFields = false) {
+    static function req($method, $url, $requestHeaders = array(), $postFields = false, $basicAuth = false) {
         $c = curl_init();
 
         curl_setopt($c, CURLOPT_URL, $url);
@@ -29,6 +30,8 @@ class HttpRequest {
         curl_setopt($c, CURLOPT_HTTPHEADER, $requestHeaders);
         if(false !== $postFields)
             curl_setopt($c, CURLOPT_POSTFIELDS, $postFields);
+        if(false !== $basicAuth)
+            curl_setopt($c, CURLOPT_USERPWD, $basicAuth);
         curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($c, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($c, CURLOPT_CONNECTTIMEOUT, 5);

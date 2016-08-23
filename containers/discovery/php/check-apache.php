@@ -29,12 +29,16 @@ while(1) {
     }
 
     // Register the webserver's dashboard on Grafana
-    $cmd_return = shell_exec("etcdctl --endpoints='$etcd_endpoints' get /services/graphite &> /dev/null; echo $?");
-    $cmd_return = trim($cmd_return);
-    if ('0' === $cmd_return) {
+    $cmd_return = shell_exec("etcdctl --endpoints='$etcd_endpoints' get /services/graphite; echo $?");
+    $cmd_return = array_pop(explode("\n", trim($cmd_return)));
+    error_log('cmd_return = '.var_export($cmd_return, 1));
+    if ('0' == $cmd_return) {
+        error_log('/services/graphite is not empty');
         $grafana_url = 'http://'.trim(shell_exec("etcdctl --endpoints='$etcd_endpoints' get /services/graphite"));
         create_graphite_datasource_if_missing($grafana_url);
     }
+    else
+        error_log('/services/graphite is empty');
 
     // Sleep
     sleep(20);
