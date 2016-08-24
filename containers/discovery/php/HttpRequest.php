@@ -30,10 +30,8 @@ class HttpRequest {
         curl_setopt($c, CURLOPT_HTTPHEADER, $requestHeaders);
         if(false !== $postFields)
             curl_setopt($c, CURLOPT_POSTFIELDS, $postFields);
-        if(false !== $basicAuth) {
-            error_log(' ============================> basicAuth: '.$basicAuth);
+        if(false !== $basicAuth)
             curl_setopt($c, CURLOPT_USERPWD, $basicAuth);
-        }
         curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($c, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($c, CURLOPT_CONNECTTIMEOUT, 5);

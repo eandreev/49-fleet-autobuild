@@ -21,7 +21,7 @@ KillMode=none
 EnvironmentFile=/etc/environment
 
 ExecStartPre=/usr/bin/docker pull eandreev/nginx-lb-test
-ExecStart=/usr/bin/docker run --name nginx_lb -p ${COREOS_PUBLIC_IPV4}:80:80 eandreev/nginx-lb-test /usr/local/bin/confd-watch ${COREOS_PUBLIC_IPV4}:4001
+ExecStart=/usr/bin/docker run --rm --name nginx_lb -p ${COREOS_PUBLIC_IPV4}:80:80 eandreev/nginx-lb-test /usr/local/bin/confd-watch ${COREOS_PUBLIC_IPV4}:4001
 ExecStop=/usr/bin/docker stop nginx_lb
 
 [X-Fleet]

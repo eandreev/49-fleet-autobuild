@@ -23,7 +23,9 @@ EnvironmentFile=/etc/environment
 ExecStartPre=-/usr/bin/docker kill graphite
 ExecStartPre=-/usr/bin/docker rm graphite
 ExecStartPre=/usr/bin/docker pull nickstenning/graphite
-ExecStart=/usr/bin/docker run --name graphite \
+ExecStart=/usr/bin/docker run \
+        --rm \
+        --name graphite \
         -p ${COREOS_PUBLIC_IPV4}:80:80 \
         -p ${COREOS_PUBLIC_IPV4}:2003:2003 \
         -p ${COREOS_PUBLIC_IPV4}:2004:2004 \

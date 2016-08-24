@@ -23,6 +23,7 @@ EnvironmentFile=/etc/environment
 
 ExecStartPre=/usr/bin/docker pull eandreev/apache-lb-test
 ExecStart=/usr/bin/docker run \
+    --rm \
     --name apache.%i \
     -e COLLECTD_HOSTNAME=apache-%i \
     -p ${COREOS_PRIVATE_IPV4}:80:80 \

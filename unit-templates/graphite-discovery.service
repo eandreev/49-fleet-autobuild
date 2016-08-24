@@ -23,6 +23,7 @@ EnvironmentFile=/etc/environment
 
 ExecStartPre=/usr/bin/docker pull eandreev/discovery
 ExecStart=/usr/bin/docker run \
+    --rm \
     --name graphite-discovery \
     --memory 256m \
     eandreev/discovery \

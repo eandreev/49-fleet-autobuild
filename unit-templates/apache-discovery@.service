@@ -24,6 +24,7 @@ EnvironmentFile=/etc/environment
 
 ExecStartPre=/usr/bin/docker pull eandreev/discovery
 ExecStart=/usr/bin/docker run \
+    --rm \
     --name apache-discovery.%i \
     --memory 256m \
     eandreev/discovery \
