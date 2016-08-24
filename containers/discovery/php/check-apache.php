@@ -3,14 +3,20 @@
 require_once __DIR__.'/HttpRequest.php';
 require_once __DIR__.'/grafana-utils.php';
 
-if(!isset($_SERVER['argv'][1]) || !isset($_SERVER['argv'][2]) || !isset($_SERVER['argv'][3])) {
-    error_log('Usage: php '.basename($_SERVER['argv'][0]).' etcd-endpoints ip port');
+if(
+    !isset($_SERVER['argv'][1]) ||
+    !isset($_SERVER['argv'][2]) ||
+    !isset($_SERVER['argv'][3]) ||
+    !isset($_SERVER['argv'][4])
+) {
+    error_log('Usage: php '.basename($_SERVER['argv'][0]).' machine-name etcd-endpoints ip port');
     exit(1);
 }
 
-$etcd_endpoints = $_SERVER['argv'][1];
-$ip             = $_SERVER['argv'][2];
-$port           = $_SERVER['argv'][3];
+$machine_name   = $_SERVER['argv'][1];
+$etcd_endpoints = $_SERVER['argv'][2];
+$ip             = $_SERVER['argv'][3];
+$port           = $_SERVER['argv'][4];
 
 $url = "http://$ip:$port";
 
@@ -31,11 +37,15 @@ while(1) {
     // Register the webserver's dashboard on Grafana
     $cmd_return = shell_exec("etcdctl --endpoints='$etcd_endpoints' get /services/graphite; echo $?");
     $cmd_return = array_pop(explode("\n", trim($cmd_return)));
-    error_log('cmd_return = '.var_export($cmd_return, 1));
     if ('0' == $cmd_return) {
-        error_log('/services/graphite is not empty');
         $grafana_url = 'http://'.trim(shell_exec("etcdctl --endpoints='$etcd_endpoints' get /services/graphite"));
+
+        // make sure the datasource exists
         create_graphite_datasource_if_missing($grafana_url);
+
+        // make sure the dashboard exists
+        $dashboard_json = json_decode( str_replace('{MACHINE_NAME}', $machine_name, file_get_contents(__DIR__.'/dashboards/basic-metrics.json')) );
+        create_grafana_dashboard_if_missing($grafana_url, $machine_name, $dashboard_json);
     }
     else
         error_log('/services/graphite is empty');

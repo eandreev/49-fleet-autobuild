@@ -1,6 +1,6 @@
 {
   "id": 1,
-  "title": "apache-1",
+  "title": "{MACHINE_NAME}",
   "originalTitle": "New dashboard",
   "tags": [],
   "style": "dark",
@@ -16,7 +16,7 @@
       "collapse": false,
       "panels": [
         {
-          "title": "apache-1 cpu",
+          "title": "{MACHINE_NAME} cpu",
           "error": false,
           "span": 12,
           "editable": true,
@@ -70,7 +70,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "apache-1.cpu-0.*"
+              "target": "{MACHINE_NAME}.cpu-0.*"
             }
           ],
           "aliasColors": {},
@@ -86,7 +86,7 @@
       "collapse": false,
       "panels": [
         {
-          "title": "apache-1 memory",
+          "title": "{MACHINE_NAME} memory",
           "error": false,
           "span": 12,
           "editable": true,
@@ -140,7 +140,7 @@
           "targets": [
             {
               "refId": "A",
-              "target": "apache-1.memory.*"
+              "target": "{MACHINE_NAME}.memory.*"
             }
           ],
           "aliasColors": {},
@@ -197,12 +197,12 @@
           "targets": [
             {
               "refId": "A",
-              "target": "apache-1.interface-eth0.if_packets.*"
+              "target": "{MACHINE_NAME}.interface-eth0.if_packets.*"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "apache-1 eth0",
+          "title": "{MACHINE_NAME} eth0",
           "tooltip": {
             "shared": true,
             "value_type": "cumulative"

@@ -32,11 +32,16 @@ function create_update_dashboard($grafana_url, $json_obj, $auth = 'admin:admin')
         'Dashboard' => $json_obj,
         'overwrite' => true
     ];
-    //$post_fields = $json_obj;
 
-        print_r(json_encode($post_fields));
+    HttpRequest::perform('POST', $grafana_url.'/api/dashboards/db', ['Content-Type: application/json'], json_encode($post_fields), $auth);
+}
 
-    $r = HttpRequest::perform('POST', $grafana_url.'/api/dashboards/db', ['Content-Type: application/json'], json_encode($post_fields), $auth);
-    // /api/dashboards/db
-    print_r($r);
+function check_if_dashboard_exists($grafana_url, $slug, $auth = 'admin:admin') {
+    $r = HttpRequest::perform('GET', $grafana_url.'/api/dashboards/db/'.$slug, [], false, $auth);
+    return 200 == $r['code'];
+}
+
+function create_grafana_dashboard_if_missing($grafana_url, $slug, $dashboard_json, $auth = 'admin:admin') {
+    if(!check_if_dashboard_exists($grafana_url, $slug, $auth))
+        create_update_dashboard($grafana_url, $dashboard_json, $auth);
 }

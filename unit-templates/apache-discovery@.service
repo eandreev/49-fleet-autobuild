@@ -29,6 +29,7 @@ ExecStart=/usr/bin/docker run \
     --memory 256m \
     eandreev/discovery \
         php /var/www/php/check-apache.php \
+            apache-%i \
             ${COREOS_PRIVATE_IPV4}:2379,${COREOS_PRIVATE_IPV4}:4001 \
             ${COREOS_PRIVATE_IPV4} \
             80
