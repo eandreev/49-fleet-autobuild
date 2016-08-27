@@ -2,4 +2,4 @@
 /.vagrant
 /.idea
 /registry-cache
-!/registry-cache/placeholder.txt
+!/registry-cache/README
