@@ -6,6 +6,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install php5-cli php5-curl php5-me
 # copy php scripts
 RUN mkdir -p /var/www/php
 ADD php/* /var/www/php/
+ADD php/dashboards/* /var/www/php/dashboards/
 
 # extract etcdctl
 ADD etcd-v3.0.6-linux-amd64.tar.gz /

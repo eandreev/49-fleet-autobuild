@@ -80,8 +80,10 @@ Vagrant.configure("2") do |config|
       # Map the current direcory to /vagrant inside the VM
       config.vm.synced_folder ".", "/home/core/share" #, nfs: true, id: "core", mount_options: ['nolock,vers=3,udp']
 
+      config.vm.provision "shell", inline: "echo '172.17.8.90 hub-proxy' >> /etc/hosts"
+
       # Copy the VM-specific cloud-config file to the new VM
-	  cloud_config_path = 'generated-cloud-init-files/cloud-init-%02d' % [i]
+	    cloud_config_path = 'generated-cloud-init-files/cloud-init-%02d' % [i]
       config.vm.provision :file, :source => "#{cloud_config_path}", :destination => "/tmp/vagrantfile-user-data"
       config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
 
@@ -90,4 +92,33 @@ Vagrant.configure("2") do |config|
       config.vm.provision :shell, :inline => "cat /tmp/bash-hist.txt > /home/core/.bash_history; chown core:core /home/core/.bash_history", :privileged => true
     end
   end
+
+  # Provision a machine that will run a Docker Hub proxy; it does not need to be a part of the cluster 
+  config.vm.define vm_name = "core-hub-cache" do |config|
+    config.vm.hostname = vm_name
+
+    config.vm.provider :virtualbox do |vb|
+      vb.gui = false
+      vb.cpus = 1
+      vb.memory = 1024
+      vb.customize ["modifyvm", :id, "--cpuexecutioncap", "#{vb_cpuexecutioncap}"]
+    end
+
+    # Assign the ip address
+    config.vm.network :private_network, ip: "172.17.8.90"
+
+    # Map the current direcory to /vagrant inside the VM
+    config.vm.synced_folder ".", "/home/core/share" #, nfs: true, id: "core", mount_options: ['nolock,vers=3,udp']
+
+    config.vm.provision "shell", inline: "mkdir /certs"
+
+    config.vm.provision "shell", inline: "echo '172.17.8.90 hub-proxy' >> /etc/hosts"
+
+    config.vm.provision :file, :source => "docker-hub-proxy.service", :destination => "/tmp/docker-hub-proxy.service"
+    config.vm.provision "shell", inline: "cat /tmp/docker-hub-proxy.service > /etc/systemd/system/docker-hub-proxy.service"
+    
+    config.vm.provision "shell", inline: "systemctl enable docker-hub-proxy.service"
+    config.vm.provision "shell", inline: "systemctl start docker-hub-proxy.service"
+  end
+
 end

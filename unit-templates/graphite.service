@@ -19,10 +19,11 @@ TimeoutStartSec=0
 KillMode=none
 
 EnvironmentFile=/etc/environment
+#EnvironmentFile=/etc/environment2
 
 ExecStartPre=-/usr/bin/docker kill graphite
 ExecStartPre=-/usr/bin/docker rm graphite
-ExecStartPre=/usr/bin/docker pull nickstenning/graphite
+ExecStartPre=/usr/bin/docker pull eandreev/grafana
 ExecStart=/usr/bin/docker run \
         --rm \
         --name graphite \
@@ -32,7 +33,7 @@ ExecStart=/usr/bin/docker run \
         -p ${COREOS_PUBLIC_IPV4}:7002:7002 \
         -p ${COREOS_PUBLIC_IPV4}:8000:8000 \
         eandreev/grafana
-ExecStop=/usr/bin/docker stop graphite
+ExecStop=-/usr/bin/docker stop graphite
 
 # we used nickstenning/graphite previously
 

@@ -1,0 +1,33 @@
+[Unit]
+Description=Docker Registry Proxy
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill hub-proxy
+ExecStartPre=-/usr/bin/docker rm hub-proxy
+ExecStartPre=/usr/bin/docker pull registry
+#ExecStart=/usr/bin/docker run --name hub-proxy -p 5000:5000 -v /tmp/registry-dev:/tmp/registry-dev registry
+ExecStart=/usr/bin/docker run \
+  --name hub-proxy \
+  -p 5000:5000 \
+  --restart=always \
+  -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io \
+  -v /home/core/registry:/var/lib/registry \
+  registry:2
+
+  # -v /certs:/certs \
+  # -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+  # -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+
+
+#docker run -p 5000:5000 --restart=always --name registry \
+#  -v `pwd`/certs:/certs \
+#  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+#  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+#  -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io \
+#  registry:2
+
+[Install]
+WantedBy=multi-user.target

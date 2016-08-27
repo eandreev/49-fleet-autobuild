@@ -1,3 +1,4 @@
 docker build --no-cache -f containers/apache/Dockerfile -t eandreev/apache-lb-test containers/apache; docker push eandreev/apache-lb-test:latest
 echo "test.count 4 `date +%s`" | nc 172.17.8.101 2003
+http://giallone.blogspot.ru/2016/04/dockercachingproxy.html
 

@@ -20,6 +20,7 @@ TimeoutStartSec=0
 KillMode=none
 
 EnvironmentFile=/etc/environment
+#EnvironmentFile=/etc/environment2
 
 ExecStartPre=/usr/bin/docker pull eandreev/discovery
 ExecStart=/usr/bin/docker run \
@@ -31,7 +32,7 @@ ExecStart=/usr/bin/docker run \
             ${COREOS_PRIVATE_IPV4}:2379,${COREOS_PRIVATE_IPV4}:4001 \
             ${COREOS_PRIVATE_IPV4}
 ExecStop=-/usr/bin/etcdctl rm /services/graphite/${COREOS_PRIVATE_IPV4}
-ExecStop=/usr/bin/docker stop graphite-discovery
+ExecStop=-/usr/bin/docker stop graphite-discovery
 
 [X-Fleet]
 # Schedule on the same machine as the associated Apache service
