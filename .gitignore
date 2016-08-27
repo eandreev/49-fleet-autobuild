@@ -1,3 +1,5 @@
 /generated-cloud-init-files/cloud-init-*
 /.vagrant
 /.idea
+/registry-cache
+!/registry-cache/placeholder.txt

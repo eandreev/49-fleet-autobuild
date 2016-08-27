@@ -93,6 +93,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
+
   # Provision a machine that will run a Docker Hub proxy; it does not need to be a part of the cluster 
   config.vm.define vm_name = "core-hub-cache" do |config|
     config.vm.hostname = vm_name
@@ -108,9 +109,8 @@ Vagrant.configure("2") do |config|
     config.vm.network :private_network, ip: "172.17.8.90"
 
     # Map the current direcory to /vagrant inside the VM
-    config.vm.synced_folder ".", "/home/core/share" #, nfs: true, id: "core", mount_options: ['nolock,vers=3,udp']
-
-    config.vm.provision "shell", inline: "mkdir /certs"
+    config.vm.synced_folder ".", "/home/core/share", nfs: true, id: "core", mount_options: ['nolock,vers=3,udp']
+    config.vm.synced_folder "./registry-cache", "/home/core/registry", nfs: true, id: "core", mount_options: ['nolock,vers=3,udp']
 
     config.vm.provision "shell", inline: "echo '172.17.8.90 hub-proxy' >> /etc/hosts"
 
